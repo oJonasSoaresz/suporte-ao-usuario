@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Revisão Final - Suporte ao Usuário</title>
+    <style>
+        /* Estilos CSS para o Layout e Aparência */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --background-light: #f8f9fa;
+            --text-dark: #343a40;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: var(--success-color);
+            border-radius: 5px;
+            transition: width 0.4s ease;
+        }
+
+        #question-number {
+            text-align: right;
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
+        #question-text {
+            font-size: 1.25em;
+            margin-bottom: 20px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            background-color: #e9ecef;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            font-size: 1.05em;
+        }
+
+        .option-item:hover:not(.disabled) {
+            background-color: #dfe6ee;
+            transform: translateY(-2px);
+        }
+
+        .option-item.disabled {
+            cursor: default;
+        }
+
+        /* Classes para feedback */
+        .option-item.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .option-item.incorrect {
+            background-color: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
+            font-weight: bold;
+        }
+
+        /* Área de Racional */
+        #rationale-area {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none; /* Inicialmente oculto */
+        }
+
+        #rationale-area.correct-feedback {
+            background-color: rgba(40, 167, 69, 0.1); /* Verde claro */
+            border: 1px solid var(--success-color);
+        }
+
+        #rationale-area.incorrect-feedback {
+            background-color: rgba(220, 53, 69, 0.1); /* Vermelho claro */
+            border: 1px solid var(--danger-color);
+        }
+
+        #rationale-text {
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        /* Botão para Próxima Questão */
+        #next-button {
+            display: none; /* Inicialmente oculto */
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #next-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Tela de Resultado Final */
+        #result-screen {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        #result-screen h2 {
+            font-size: 2em;
+            color: var(--primary-color);
+        }
+
+        #result-screen p {
+            font-size: 1.2em;
+            margin: 15px 0;
+        }
+
+        #restart-button {
+            padding: 10px 20px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #restart-button:hover {
+            background-color: #1e7e34;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>Quiz de Revisão Final - Suporte ao Usuário</h1>
+
+    <div id="quiz-screen">
+        <div id="question-number"></div>
+        <div class="progress-bar">
+            <div class="progress" id="progress-bar"></div>
+        </div>
+
+        <div id="question-text"></div>
+
+        <ul class="options-list" id="options-list">
+            </ul>
+
+        <div id="rationale-area">
+            <p id="rationale-text"></p>
+        </div>
+
+        <button id="next-button">Próxima Pergunta</button>
+    </div>
+
+    <div id="result-screen" style="display: none;">
+        <h2>Resultado da Revisão</h2>
+        <p>Você completou o quiz de 30 perguntas!</p>
+        <p>Pontuação Final: <span id="final-score"></span> / 30</p>
+        <button id="restart-button" onclick="window.location.reload()">Refazer Quiz</button>
+    </div>
+</div>
+
+<script>
+    // Dados do Quiz (as 30 perguntas geradas)
+    const quizData = [
+        {
+            "questionNumber": 1,
+            "question": "Qual dos itens abaixo representa o componente físico, palpável, que faz parte da estrutura de um computador?",
+            "answerOptions": [
+                {
+                    "text": "Firmware",
+                    "rationale": "Firmware é um tipo de software de baixo nível que controla o hardware, não sendo o componente físico em si.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Hardware",
+                    "rationale": "Hardware é o termo correto para descrever a parte física e tangível do computador, como o teclado, mouse e placa-mãe.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Driver",
+                    "rationale": "Driver é um software que permite ao sistema operacional interagir com um dispositivo de hardware específico.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Software",
+                    "rationale": "Software é o conjunto de instruções e programas, a parte não-física do computador.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 2,
+            "question": "A Manutenção Corretiva é o tipo de serviço de suporte que é aplicado:",
+            "answerOptions": [
+                {
+                    "text": "Para fazer melhorias e upgrades de desempenho no hardware.",
+                    "rationale": "Essa descrição se encaixa na Manutenção Evolutiva ou nos upgrades gerais.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Apenas na instalação inicial de um sistema operacional ou programa.",
+                    "rationale": "A instalação inicial é um processo de implantação, não uma manutenção reativa.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Após a falha de um componente ou software, visando restaurar a operação normal do sistema.",
+                    "rationale": "A Manutenção Corretiva é realizada para corrigir falhas, ou seja, 'após' a ocorrência de um problema.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Periodicamente, para evitar futuros problemas, como limpeza interna de componentes.",
+                    "rationale": "Esta é a definição de Manutenção Preventiva.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 3,
+            "question": "Qual componente é considerado uma das peças mais importantes do computador, conectando e permitindo a comunicação entre o Processador, a Memória RAM e os demais periféricos?",
+            "answerOptions": [
+                {
+                    "text": "Disco Rígido (HD/SSD)",
+                    "rationale": "O Disco Rígido/SSD é um dispositivo de armazenamento de dados e não o centro de comunicação entre os demais componentes.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Fonte de Alimentação",
+                    "rationale": "A Fonte de Alimentação apenas fornece energia e não atua como o 'hub' de comunicação dos dados.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Memória RAM",
+                    "rationale": "A Memória RAM armazena dados temporariamente para o processador, mas não é o componente que interliga fisicamente todos os outros.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Placa-Mãe (Motherboard)",
+                    "rationale": "A Placa-Mãe (Motherboard) é o circuito principal que conecta e coordena a comunicação de todos os componentes essenciais do computador.",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "questionNumber": 4,
+            "question": "Um dos problemas mais comuns em computadores é o seu aquecimento excessivo. Qual tipo de manutenção é ideal para prevenir que este problema ocorra?",
+            "answerOptions": [
+                {
+                    "text": "Manutenção Evolutiva, atualizando o sistema operacional.",
+                    "rationale": "A Manutenção Evolutiva foca em adicionar novos recursos ou melhorar funcionalidades, não na prevenção física de problemas.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Manutenção Preditiva, usando softwares para prever o problema com precisão.",
+                    "rationale": "A Preditiva utiliza monitoramento para prever, mas a ação de limpeza e troca de pasta térmica é classificada como Preventiva.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Manutenção Preventiva, realizando a limpeza interna dos coolers e trocando a pasta térmica periodicamente.",
+                    "rationale": "Manutenção Preventiva é o conjunto de ações realizadas periodicamente para evitar que falhas e problemas, como o superaquecimento, ocorram.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Manutenção Corretiva, trocando o processador depois que ele queima.",
+                    "rationale": "A Manutenção Corretiva ocorre após a falha; o objetivo é 'prevenir' o problema, não corrigi-lo depois de acontecer.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 5,
+            "question": "O Processador (CPU) é o 'cérebro' do computador. Para que o computador funcione, o Processador deve ser complementado por qual componente de hardware essencial para o armazenamento temporário de dados e instruções em execução?",
+            "answerOptions": [
+                {
+                    "text": "Modem",
+                    "rationale": "O Modem é um dispositivo para conexão de rede, não tendo a função principal de armazenamento temporário para o processador.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Placa de Vídeo Dedicada",
+                    "rationale": "A Placa de Vídeo processa e armazena dados gráficos, mas a memória principal para o Processador e o Sistema Operacional é outra.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Memória RAM (Random Access Memory)",
+                    "rationale": "A Memória RAM é essencial, pois armazena de forma volátil os dados e instruções que o processador está usando ativamente, garantindo velocidade.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Monitor",
+                    "rationale": "O Monitor é um periférico de saída que exibe informações, não um componente de armazenamento temporário de execução.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 6,
+            "question": "Qual é a principal função da Fonte de Alimentação (Power Supply) em um computador desktop?",
+            "answerOptions": [
+                {
+                    "text": "Processar dados e executar programas.",
+                    "rationale": "Esta é a função principal do Processador (CPU).",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Armazenar dados de forma permanente.",
+                    "rationale": "Esta é a função do Disco Rígido (HD/SSD).",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Converter a energia da tomada (AC) para a voltagem adequada (DC) que os componentes internos utilizam.",
+                    "rationale": "A Fonte de Alimentação tem a função vital de regular e fornecer a corrente contínua (DC) com a voltagem correta para a Placa-Mãe e outros componentes.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Gerenciar a comunicação entre o processador e a memória RAM.",
+                    "rationale": "Esta é a função dos chipsets da Placa-Mãe.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 7,
+            "question": "O que o termo 'Sistema Operacional' (SO) representa na estrutura de software de um computador?",
+            "answerOptions": [
+                {
+                    "text": "Qualquer programa instalado, como um jogo ou um editor de texto.",
+                    "rationale": "Jogos e editores de texto são 'softwares de aplicação', que dependem do SO para rodar.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "O conjunto de softwares antivírus e de segurança.",
+                    "rationale": "Antivírus são utilitários, não o núcleo do Sistema Operacional.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "O software essencial que gerencia o hardware e os recursos, fornecendo uma interface para o usuário e para outros programas.",
+                    "rationale": "O SO é a camada fundamental que permite o funcionamento do computador, gerenciando memória, processos e dispositivos.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Apenas o conjunto de drivers que controlam os periféricos.",
+                    "rationale": "Drivers são um tipo de software de sistema, mas o SO é o software mestre que os gerencia.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 8,
+            "question": "Um usuário relata que seu computador não inicia e ouve bipes contínuos ou irregulares. Qual tipo de falha de hardware é o mais provável?",
+            "answerOptions": [
+                {
+                    "text": "Falha no cabo de rede.",
+                    "rationale": "Um cabo de rede desconectado apenas impediria o acesso à internet, não a inicialização do computador.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Falha na Memória RAM ou na Placa de Vídeo.",
+                    "rationale": "Bipes durante a inicialização são códigos de erro (POST) que frequentemente indicam problemas críticos no hardware principal, como a Memória RAM, Processador ou a Placa de Vídeo.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Disco Rígido cheio ou fragmentado.",
+                    "rationale": "Um HD cheio ou fragmentado causa lentidão, mas o computador geralmente ainda inicializa o sistema operacional.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Bateria do mouse sem carga.",
+                    "rationale": "O computador inicializa perfeitamente mesmo sem um mouse funcionando.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 9,
+            "question": "Qual termo descreve o serviço de suporte realizado para otimizar um sistema, como desfragmentar um disco rígido ou remover programas desnecessários da inicialização?",
+            "answerOptions": [
+                {
+                    "text": "Manutenção Corretiva de Software",
+                    "rationale": "A Corretiva é para falhas, como um erro de arquivo, não para otimização geral do desempenho.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Manutenção Evolutiva de Hardware",
+                    "rationale": "A Evolutiva envolve adicionar novos recursos, e as ações listadas são de software, não de hardware.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Manutenção Preventiva de Software",
+                    "rationale": "Ações como desfragmentação, limpeza e gerenciamento de inicialização são práticas de rotina para prevenir lentidão e instabilidade futuras, enquadrando-se na Manutenção Preventiva de software.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Manutenção Preditiva de Hardware",
+                    "rationale": "A Preditiva envolve monitoramento contínuo de sinais, o que é diferente da intervenção ativa de otimização descrita.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 10,
+            "question": "Qual componente de hardware tem como principal responsabilidade o armazenamento de longo prazo, mantendo os dados mesmo quando o computador está desligado?",
+            "answerOptions": [
+                {
+                    "text": "Memória RAM",
+                    "rationale": "A RAM é volátil; ela perde todos os dados quando o computador é desligado.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Processador (CPU)",
+                    "rationale": "O Processador executa instruções, ele não é um dispositivo de armazenamento de longo prazo.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Disco Rígido (HD) ou Unidade de Estado Sólido (SSD)",
+                    "rationale": "O HD e o SSD são os dispositivos de armazenamento não-volátil (permanente) onde o Sistema Operacional e todos os arquivos são guardados.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Placa-Mãe (Motherboard)",
+                    "rationale": "A Placa-Mãe conecta os componentes, mas o armazenamento persistente é responsabilidade do HD/SSD.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 11,
+            "question": "Um 'Driver' pode ser definido como:",
+            "answerOptions": [
+                {
+                    "text": "Um tipo de software de aplicação para edição de vídeo.",
+                    "rationale": "Um editor de vídeo é um software de aplicação, não um driver.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Um componente físico (hardware) que controla a ventilação do PC.",
+                    "rationale": "Um driver é software, e o controle de ventilação é feito por hardware como coolers e controladores.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Um programa que traduz comandos do sistema operacional para uma linguagem que um dispositivo de hardware específico entenda.",
+                    "rationale": "Drivers são essenciais para que o Sistema Operacional possa usar corretamente e se comunicar com placas de vídeo, impressoras, placas de rede, etc.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "O software de segurança responsável por bloquear vírus.",
+                    "rationale": "Antivírus e Firewall são os softwares responsáveis por bloquear vírus e acessos não autorizados.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 12,
+            "question": "Qual dos seguintes softwares é um exemplo de 'Software de Aplicação'?",
+            "answerOptions": [
+                {
+                    "text": "Kernel do Linux",
+                    "rationale": "O Kernel é a parte central de um Sistema Operacional (Software de Sistema).",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Microsoft Word ou LibreOffice Writer.",
+                    "rationale": "Processadores de texto são programas que permitem ao usuário realizar tarefas específicas e produtivas, sendo um exemplo claro de Software de Aplicação.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "BIOS/UEFI",
+                    "rationale": "BIOS/UEFI é um Firmware, um software de baixo nível para iniciar o hardware.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Driver da Placa de Rede.",
+                    "rationale": "Drivers são Softwares de Sistema, essenciais para a operação do hardware.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 13,
+            "question": "A 'Tela Azul da Morte' (Blue Screen of Death - BSOD) no Windows é um indicador comum de qual tipo de problema?",
+            "answerOptions": [
+                {
+                    "text": "Cabo de alimentação solto.",
+                    "rationale": "Um cabo de alimentação solto faria o computador desligar imediatamente ou não ligar, não gerando uma tela de erro de software/sistema.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Falha crítica de sistema, geralmente causada por drivers incompatíveis, falha de hardware ou erros graves na memória (RAM).",
+                    "rationale": "O BSOD é o mecanismo do Windows para relatar um erro irrecuperável que requer o encerramento imediato do sistema para proteger o hardware.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Espaço de armazenamento esgotado.",
+                    "rationale": "HD/SSD cheio causa lentidão ou impede salvar arquivos, mas raramente um BSOD.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Conexão lenta com a internet.",
+                    "rationale": "A velocidade da internet não é uma falha de sistema operacional que causa um erro fatal (BSOD).",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 14,
+            "question": "Qual das seguintes ações NÃO é uma característica da Manutenção Preventiva de Hardware?",
+            "answerOptions": [
+                {
+                    "text": "Limpeza interna do gabinete e remoção de poeira.",
+                    "rationale": "Esta é uma ação de rotina para evitar superaquecimento, sendo, portanto, preventiva.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Substituição de um disco rígido danificado por um novo.",
+                    "rationale": "A substituição de um componente 'danificado' é uma correção após a falha, caracterizando-se como Manutenção Corretiva.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Verificação do estado dos cabos e conexões para garantir o encaixe seguro.",
+                    "rationale": "Verificar conexões é uma forma de prevenir problemas de contato ou falhas de energia, sendo preventiva.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Troca da pasta térmica do processador em intervalos regulares.",
+                    "rationale": "A troca de pasta térmica é uma medida planejada para prevenir superaquecimento, sendo preventiva.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 15,
+            "question": "Um usuário liga o computador, mas o monitor não exibe nada (fica 'Sem Sinal'). O que é mais provável causar este problema, ignorando o cabo de alimentação do monitor?",
+            "answerOptions": [
+                {
+                    "text": "Falha no Mouse ou no Teclado.",
+                    "rationale": "O computador inicializa mesmo que mouse e teclado não estejam conectados ou funcionando.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Problema na Placa de Vídeo (GPU) ou no cabo de vídeo (HDMI/VGA/DisplayPort).",
+                    "rationale": "A falta de imagem é tipicamente causada por uma falha no componente responsável por gerar o sinal (GPU) ou na conexão física (cabo de vídeo) que o leva ao monitor.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Disco Rígido com bad blocks.",
+                    "rationale": "Bad blocks afetam o carregamento de dados e a inicialização do SO, mas o BIOS/UEFI geralmente ainda exibiria o início do POST (Power-On Self-Test).",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Excesso de arquivos temporários.",
+                    "rationale": "Excesso de arquivos temporários causa lentidão, não impede a exibição da tela.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 16,
+            "question": "Na resolução de problemas de software (troubleshooting), qual é a primeira e mais simples ação que um técnico deve sugerir ao usuário?",
+            "answerOptions": [
+                {
+                    "text": "Reinstalar o sistema operacional.",
+                    "rationale": "Reinstalar o SO é um último recurso, complexo e demorado.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Realizar um backup completo dos dados.",
+                    "rationale": "O backup é uma boa prática, mas não é a primeira ação para resolver um problema de mau funcionamento imediato.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Reiniciar o computador (reboot).",
+                    "rationale": "A reinicialização encerra processos travados, libera a memória e resolve a grande maioria dos problemas temporários de software, sendo o passo inicial ideal.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Substituir a memória RAM.",
+                    "rationale": "A substituição de hardware é uma ação para problemas físicos, não para a maioria dos problemas iniciais de software.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 17,
+            "question": "Qual é a definição de Manutenção Evolutiva?",
+            "answerOptions": [
+                {
+                    "text": "Intervenção após a falha para restabelecer a operação normal.",
+                    "rationale": "Esta é a definição de Manutenção Corretiva.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Monitoramento contínuo para antecipar possíveis falhas em componentes.",
+                    "rationale": "Esta é a definição de Manutenção Preditiva.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Alteração no sistema para atender a novos requisitos, regulamentos ou adicionar funcionalidades que não existiam antes.",
+                    "rationale": "A Manutenção Evolutiva consiste em aprimorar o sistema (software ou hardware) para que ele continue útil e atualizado às novas demandas.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Limpeza periódica e verificação de integridade dos componentes.",
+                    "rationale": "Esta é a definição de Manutenção Preventiva.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 18,
+            "question": "O que a sigla CPU representa e qual é a sua função primária?",
+            "answerOptions": [
+                {
+                    "text": "Componente de Processamento Único; armazena dados de forma permanente.",
+                    "rationale": "Armazenamento permanente é função do HD/SSD. A sigla correta é Central Processing Unit.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Unidade Central de Processamento; interpreta e executa as instruções dos programas de computador.",
+                    "rationale": "A CPU é o 'cérebro' que realiza todos os cálculos e operações lógicas necessárias para a execução de tarefas.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Unidade de Controle de Periféricos; gerencia a comunicação com dispositivos externos.",
+                    "rationale": "Embora a CPU gerencie, o controle direto de periféricos é mais relacionado aos chipsets da Placa-Mãe.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Cache de Processamento Útil; armazena dados temporários em alta velocidade.",
+                    "rationale": "Isso se refere à Memória Cache, que é uma parte da CPU, mas não a sua sigla nem função primária.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 19,
+            "question": "Em um cenário de lentidão, se o Gerenciador de Tarefas do Windows mostra que o uso do disco (HD/SSD) está consistentemente em 100%, qual é a causa mais provável?",
+            "answerOptions": [
+                {
+                    "text": "Problema na Placa de Vídeo.",
+                    "rationale": "A Placa de Vídeo afetaria o uso da GPU, não o uso do disco.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Um processo em segundo plano, como um antivírus realizando uma varredura completa ou uma falha no próprio disco.",
+                    "rationale": "O uso de disco em 100% indica que há um gargalo na leitura/escrita de dados, frequentemente causado por processos com alta demanda de I/O ou por um disco antigo/lento (HD) lutando para acompanhar.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Configuração errada do monitor.",
+                    "rationale": "A configuração do monitor não impacta o desempenho do disco.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Temperatura da CPU acima do limite.",
+                    "rationale": "O superaquecimento causa lentidão porque a CPU diminui a frequência (thermal throttling), mas a causa raiz seria o uso da CPU, não do disco.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 20,
+            "question": "Qual é a principal função do BIOS ou UEFI (Firmware) de um computador?",
+            "answerOptions": [
+                {
+                    "text": "Permitir ao usuário navegar na internet.",
+                    "rationale": "O navegador e o Sistema Operacional são necessários para navegação na internet.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Gerenciar o sistema de arquivos do disco rígido.",
+                    "rationale": "O Sistema Operacional é quem gerencia o sistema de arquivos após a inicialização.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Realizar o teste inicial de hardware (POST) e carregar o Sistema Operacional.",
+                    "rationale": "O BIOS/UEFI é o primeiro software a rodar; ele inicializa e testa os componentes críticos (POST) e, em seguida, transfere o controle para o SO.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Converter energia AC para DC.",
+                    "rationale": "Esta é a função da Fonte de Alimentação.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 21,
+            "question": "Em 'Suporte ao Usuário', a prática de 'Backup' é essencial. O que constitui um backup eficaz?",
+            "answerOptions": [
+                {
+                    "text": "Salvar todos os arquivos em uma única pasta dentro do próprio disco rígido principal.",
+                    "rationale": "Salvar no mesmo disco rígido não protege contra falha total do disco ou desastres físicos (incêndio, roubo).",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Copiar os arquivos importantes para um local externo, como um HD externo ou serviço de nuvem (cloud).",
+                    "rationale": "Um backup eficaz exige redundância, armazenando os dados em um local fisicamente separado do sistema original.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Apenas desfragmentar o disco rígido regularmente.",
+                    "rationale": "Desfragmentar melhora o desempenho, mas não é uma cópia de segurança dos dados.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Instalar um software antivírus no computador.",
+                    "rationale": "O antivírus protege contra ameaças, mas não restaura dados perdidos após uma falha de hardware ou roubo.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 22,
+            "question": "Qual periférico é classificado como apenas de 'Entrada' (Input)?",
+            "answerOptions": [
+                {
+                    "text": "Impressora",
+                    "rationale": "Impressora é um dispositivo de Saída, pois produz um documento físico.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Monitor Touchscreen",
+                    "rationale": "Um monitor touchscreen é de Entrada e Saída (I/O).",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Webcam (Câmera)",
+                    "rationale": "A Webcam captura dados de imagem ou vídeo e os envia ao computador, sendo puramente de Entrada.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Placa de Rede",
+                    "rationale": "Placas de Rede são dispositivos de Entrada e Saída (I/O).",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 23,
+            "question": "Um usuário percebe que a tela inicial do seu navegador foi alterada para um site desconhecido e pop-ups irritantes aparecem constantemente. O que mais provavelmente causou esse comportamento?",
+            "answerOptions": [
+                {
+                    "text": "Superaquecimento da CPU.",
+                    "rationale": "O superaquecimento causaria lentidão ou desligamento, mas não alteraria configurações do navegador ou geraria pop-ups.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Instalação de um software malicioso (Malware) do tipo Adware ou Hijacker.",
+                    "rationale": "Adware e Browser Hijackers são softwares maliciosos projetados para exibir anúncios indesejados e alterar configurações do navegador, como a página inicial.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Falta de memória RAM no sistema.",
+                    "rationale": "A falta de RAM causa lentidão e travamentos, mas não instala software malicioso ou altera a página inicial.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Cabo de vídeo mal conectado.",
+                    "rationale": "O cabo de vídeo afeta apenas a exibição da imagem.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 24,
+            "question": "Qual é o termo para o processo de instalar um novo sistema operacional em um computador, apagando completamente o sistema e os dados anteriores?",
+            "answerOptions": [
+                {
+                    "text": "Desfragmentação.",
+                    "rationale": "Desfragmentação é a reorganização de dados no disco para otimização de velocidade.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Restauração de Sistema.",
+                    "rationale": "A Restauração de Sistema reverte o SO para um estado anterior, sem apagar tudo.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Instalação limpa (ou Formatação e Instalação).",
+                    "rationale": "Este processo envolve formatar a partição principal (apagando os dados) e instalar o SO do zero, sendo a solução para muitos problemas graves de software.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Manutenção Preditiva.",
+                    "rationale": "Manutenção Preditiva é monitoramento, não instalação.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 25,
+            "question": "O que o Firewall (Parede de Fogo) faz para proteger um computador ou rede?",
+            "answerOptions": [
+                {
+                    "text": "Ele remove vírus já instalados no disco rígido.",
+                    "rationale": "Remover vírus é a função do software antivírus.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Ele funciona como uma barreira que monitora e controla o tráfego de dados de entrada e saída da rede, baseado em regras de segurança.",
+                    "rationale": "O Firewall é essencial para bloquear acessos não autorizados de fora (ou de dentro) e controlar quais programas podem se comunicar com a internet.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Ele otimiza o uso da memória RAM para acelerar o sistema.",
+                    "rationale": "A otimização de RAM é feita pelo Sistema Operacional ou utilitários de terceiros.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Ele traduz o código binário da máquina para linguagem humana.",
+                    "rationale": "Essa função é complexa e não é a principal função de um firewall de rede.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 26,
+            "question": "Qual dos seguintes é um periférico classificado como 'Saída' (Output)?",
+            "answerOptions": [
+                {
+                    "text": "Scanner.",
+                    "rationale": "O Scanner envia dados (imagem) para o computador, sendo de Entrada.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Microfone.",
+                    "rationale": "O Microfone envia dados (áudio) para o computador, sendo de Entrada.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Caixa de Som (Speaker).",
+                    "rationale": "A Caixa de Som recebe o sinal de áudio do computador e o reproduz para o usuário, sendo puramente de Saída.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Teclado.",
+                    "rationale": "O Teclado envia dados (comandos/texto) para o computador, sendo de Entrada.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 27,
+            "question": "Um técnico de suporte usa o protocolo RDP (Remote Desktop Protocol) ou VNC. Qual tipo de suporte está sendo realizado?",
+            "answerOptions": [
+                {
+                    "text": "Suporte Local de Hardware.",
+                    "rationale": "Suporte Local implica a presença física do técnico.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Manutenção Preditiva (Monitoramento de Rede).",
+                    "rationale": "A manutenção preditiva foca em ferramentas de monitoramento para prever falhas.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Suporte Remoto de Software.",
+                    "rationale": "O RDP/VNC permite que o técnico acesse e controle o computador do usuário pela rede ou internet para diagnosticar e corrigir problemas sem estar fisicamente presente.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Manutenção Corretiva (Substituição de Peças).",
+                    "rationale": "Substituir peças requer presença física e é Manutenção Corretiva de Hardware.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 28,
+            "question": "Qual é o propósito principal da 'pasta térmica' aplicada entre a CPU e o dissipador de calor (cooler)?",
+            "answerOptions": [
+                {
+                    "text": "Fixar o cooler na CPU para evitar que ele se solte.",
+                    "rationale": "A fixação é feita por travas, parafusos ou presilhas.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Isolar a CPU da eletricidade estática do cooler.",
+                    "rationale": "A pasta térmica é condutora de calor, mas não tem como foco principal a isolação elétrica.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Preencher as microimperfeições das superfícies, maximizando a transferência de calor da CPU para o cooler.",
+                    "rationale": "A pasta térmica é uma interface de alta condutividade térmica que elimina bolsas de ar (que isolam o calor), permitindo uma refrigeração eficiente.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Lubrificar as ventoinhas do cooler para que girem mais rápido.",
+                    "rationale": "A pasta é aplicada no chip, não nas ventoinhas; a lubrificação das ventoinhas é feita com óleo ou graxa no eixo.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 29,
+            "question": "Um 'Trojan' (Cavalo de Troia) é um tipo de Malware que se caracteriza por:",
+            "answerOptions": [
+                {
+                    "text": "Replicar-se rapidamente, infectando outros arquivos e computadores em rede sem intervenção humana.",
+                    "rationale": "Esta é a definição de um Vírus ou Worm.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Bloquear o acesso aos arquivos do usuário, exigindo um resgate em dinheiro para liberá-los.",
+                    "rationale": "Esta é a definição de Ransomware.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Parecer um software útil e legítimo para induzir o usuário a instalá-lo, mas escondendo uma função maliciosa.",
+                    "rationale": "Os Trojans se disfarçam para entrar no sistema e conceder acesso remoto, roubar dados ou instalar outros malwares.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Monitorar a digitação do teclado para roubar senhas (Keylogger).",
+                    "rationale": "Keylogger é uma funcionalidade comum em muitos malwares, mas a característica de disfarce é o que define o Trojan.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "questionNumber": 30,
+            "question": "O que deve ser verificado primeiro se um computador não conseguir se conectar à internet através de um cabo de rede (Ethernet)?",
+            "answerOptions": [
+                {
+                    "text": "A bateria interna (CMOS) da Placa-Mãe.",
+                    "rationale": "A bateria afeta o relógio e as configurações do BIOS, mas não a conectividade da rede.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "O driver da placa de som.",
+                    "rationale": "O driver de som não tem relação com a placa de rede.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Se o cabo está firmemente conectado tanto no computador quanto no roteador/switch, e se as luzes da porta de rede estão acesas.",
+                    "rationale": "A falha de conexão mais comum é física. Checar a integridade da conexão (cabo e luzes indicadoras) é o primeiro passo para o diagnóstico.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A quantidade de memória RAM instalada no sistema.",
+                    "rationale": "A RAM insuficiente causaria lentidão, mas não impediria a conexão física de rede.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    const totalQuestions = quizData.length;
+    let answered = false;
+
+    // Elementos do DOM
+    const questionNumberEl = document.getElementById('question-number');
+    const progressBarEl = document.getElementById('progress-bar');
+    const questionTextEl = document.getElementById('question-text');
+    const optionsListEl = document.getElementById('options-list');
+    const rationaleAreaEl = document.getElementById('rationale-area');
+    const rationaleTextEl = document.getElementById('rationale-text');
+    const nextButton = document.getElementById('next-button');
+    const quizScreenEl = document.getElementById('quiz-screen');
+    const resultScreenEl = document.getElementById('result-screen');
+    const finalScoreEl = document.getElementById('final-score');
+
+    function updateProgress() {
+        const progressPercentage = (currentQuestionIndex / totalQuestions) * 100;
+        progressBarEl.style.width = `${progressPercentage}%`;
+        questionNumberEl.textContent = `Pergunta ${currentQuestionIndex + 1} de ${totalQuestions}`;
+    }
+
+    function loadQuestion() {
+        if (currentQuestionIndex >= totalQuestions) {
+            showResult();
+            return;
+        }
+
+        const currentQuestion = quizData[currentQuestionIndex];
+        
+        // Limpa estado anterior
+        optionsListEl.innerHTML = '';
+        rationaleAreaEl.style.display = 'none';
+        rationaleAreaEl.classList.remove('correct-feedback', 'incorrect-feedback');
+        nextButton.style.display = 'none';
+        answered = false;
+
+        // Atualiza a pergunta
+        updateProgress();
+        questionTextEl.textContent = `${currentQuestion.questionNumber}. ${currentQuestion.question}`;
+
+        // Cria as opções
+        currentQuestion.answerOptions.forEach((option, index) => {
+            const listItem = document.createElement('li');
+            listItem.className = 'option-item';
+            // Usa as letras do alfabeto (A, B, C, D) para prefixar as opções
+            const optionLetter = String.fromCharCode(65 + index); 
+            listItem.textContent = `${optionLetter}) ${option.text}`;
+            listItem.dataset.isCorrect = option.isCorrect;
+            listItem.dataset.rationale = option.rationale;
+            listItem.addEventListener('click', () => checkAnswer(listItem, option));
+            optionsListEl.appendChild(listItem);
+        });
+    }
+
+    function checkAnswer(selectedElement, selectedOption) {
+        if (answered) return;
+        answered = true;
+
+        const isCorrect = selectedOption.isCorrect;
+        const rationale = selectedOption.rationale;
+        
+        // Desativa clique em todas as opções
+        Array.from(optionsListEl.children).forEach(item => {
+            item.classList.add('disabled');
+        });
+
+        // Aplica feedback visual
+        if (isCorrect) {
+            score++;
+            selectedElement.classList.add('correct');
+            rationaleAreaEl.classList.add('correct-feedback');
+            rationaleTextEl.innerHTML = `✅ **Correto!** ${rationale}`;
+        } else {
+            selectedElement.classList.add('incorrect');
+            rationaleAreaEl.classList.add('incorrect-feedback');
+            
+            // Encontra a resposta correta para a justificar
+            const correctOption = quizData[currentQuestionIndex].answerOptions.find(opt => opt.isCorrect);
+            
+            // Destaca a correta
+            Array.from(optionsListEl.children).forEach(item => {
+                if (item.dataset.isCorrect === 'true') {
+                    item.classList.add('correct');
+                }
+            });
+
+            rationaleTextEl.innerHTML = `❌ **Errado.** A alternativa correta era a ${String.fromCharCode(65 + quizData[currentQuestionIndex].answerOptions.indexOf(correctOption))}. ${rationale}`;
+        }
+
+        // Exibe o racional e o botão de próxima
+        rationaleAreaEl.style.display = 'block';
+        nextButton.style.display = 'block';
+    }
+
+    function showResult() {
+        quizScreenEl.style.display = 'none';
+        resultScreenEl.style.display = 'block';
+        finalScoreEl.textContent = `${score}`;
+        
+        // Atualiza a barra de progresso para 100%
+        progressBarEl.style.width = `100%`;
+        questionNumberEl.textContent = `Quiz Concluído`;
+    }
+
+    // Evento para o botão "Próxima Pergunta"
+    nextButton.addEventListener('click', () => {
+        currentQuestionIndex++;
+        loadQuestion();
+    });
+
+    // Inicia o Quiz
+    loadQuestion();
+</script>
+
+</body>
+</html>
