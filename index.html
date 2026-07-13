@@ -1,705 +1,588 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz de Revisão Final - Suporte ao Usuário</title>
-    <style>
-        /* Estilos CSS para o Layout e Aparência */
-        :root {
-            --primary-color: #007bff;
-            --secondary-color: #6c757d;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --background-light: #f8f9fa;
-            --text-dark: #343a40;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sessão de Diagnóstico de Segurança Emocional | Alexandre Jordão</title>
+<meta name="description" content="Em 50 minutos, descubra qual padrão emocional está por trás da sua ansiedade nos relacionamentos. Diagnóstico com mapa escrito. R$97, online.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --base:#FDFBF7;
+  --surface:#EDE6DC;
+  --ink:#1B2A33;
+  --ink-soft:#4A5A63;
+  --brand:#2E5A6B;
+  --brand-deep:#1F4150;
+  --action:#A8501F;
+  --action-hover:#8E4218;
+  --proof:#7A9E8E;
+  --line:rgba(46,90,107,.16);
+  --shadow:0 4px 24px rgba(27,42,51,.08);
+  --r-card:12px;
+  --r-btn:8px;
+  --gap:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--base);
+  color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 22px}
+section{padding:var(--gap) 0}
+h1,h2,h3{font-family:'Lora',Georgia,serif;color:var(--brand);line-height:1.18}
+h1{font-size:32px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:26px;font-weight:600;margin-bottom:20px}
+h3{font-size:19px;font-weight:600;color:var(--ink)}
+p{margin-bottom:14px;max-width:62ch}
+.eyebrow{
+  font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--proof);margin-bottom:12px;
+}
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--background-light);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
+/* ---------- BOTÃO: cor exclusiva ---------- */
+.cta{
+  display:block;width:100%;min-height:52px;
+  background:var(--action);color:#fff;
+  font-family:'Inter';font-size:17px;font-weight:600;line-height:1;
+  border:none;border-radius:var(--r-btn);
+  padding:18px 24px;text-align:center;text-decoration:none;
+  cursor:pointer;transition:background .18s ease,transform .18s ease;
+}
+.cta:hover{background:var(--action-hover);transform:translateY(-1px)}
+.cta:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
+.micro{
+  font-size:14px;line-height:1.45;color:var(--ink-soft);
+  text-align:center;margin-top:10px;
+}
+.cta-block{margin-top:32px;max-width:420px}
 
-        .quiz-container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            max-width: 700px;
-            width: 100%;
-        }
+/* ---------- MARCA ---------- */
+.topbar{padding:20px 0;position:sticky;top:0;z-index:20;background:rgba(253,251,247,.92);backdrop-filter:blur(6px)}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{width:26px;height:26px}
+.brand span{font-family:'Lora';font-weight:600;font-size:17px;color:var(--brand)}
 
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 1.8em;
-        }
+/* ---------- HERO ---------- */
+.hero{padding-top:36px;padding-bottom:56px}
+.hero .sub{font-size:19px;color:var(--ink-soft);margin-top:16px;max-width:52ch}
+.hero h1{max-width:16ch}
+ul.ticks{list-style:none;margin:26px 0 0}
+ul.ticks li{
+  display:flex;align-items:center;gap:10px;
+  font-size:16px;font-weight:500;padding:5px 0;
+}
+ul.ticks li::before{
+  content:"";width:18px;height:18px;flex:0 0 18px;border-radius:50%;
+  background:var(--proof);
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M20 6L9 17l-5-5' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/13px no-repeat;
+  mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M20 6L9 17l-5-5' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/13px no-repeat;
+}
+.seals{
+  display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:26px;
+  font-size:13px;color:var(--ink-soft);
+}
+.seals span{display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--proof);display:inline-block}
+.portrait{
+  margin-top:36px;width:100%;aspect-ratio:4/5;max-width:340px;
+  border-radius:var(--r-card);background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink-soft);font-size:13px;text-align:center;padding:16px;
+  border:1px dashed var(--line);
+}
 
-        .progress-bar {
-            height: 10px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
+/* ---------- BARRA DE PROVA ---------- */
+.proofbar{background:var(--surface);padding:34px 0}
+.proofbar .grid{display:grid;gap:18px;grid-template-columns:1fr}
+.stat{text-align:center}
+.stat b{display:block;font-family:'Lora';font-size:30px;font-weight:700;color:var(--brand)}
+.stat small{font-size:14px;color:var(--ink-soft)}
 
-        .progress {
-            height: 100%;
-            width: 0%;
-            background-color: var(--success-color);
-            border-radius: 5px;
-            transition: width 0.4s ease;
-        }
+/* ---------- PLACEHOLDER ---------- */
+.ph{
+  background:#FFF4CC;border:1px dashed #C9A227;color:#6B5310;
+  font-size:12px;font-weight:600;letter-spacing:.02em;
+  padding:3px 8px;border-radius:5px;display:inline-block;margin-bottom:6px;
+}
 
-        #question-number {
-            text-align: right;
-            font-size: 0.9em;
-            color: var(--secondary-color);
-            margin-bottom: 5px;
-        }
+/* ---------- DOR ---------- */
+.pain{list-style:none;margin-top:8px;max-width:60ch}
+.pain li{
+  padding:15px 0 15px 30px;border-bottom:1px solid var(--line);
+  font-size:18px;position:relative;
+}
+.pain li:last-child{border-bottom:none}
+.pain li::before{
+  content:"";position:absolute;left:0;top:24px;width:16px;height:6px;
+  background:no-repeat center/16px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'><path d='M0 4c3-4 6-4 9 0s6 4 9 0 6-4 6 0' fill='none' stroke='%232E5A6B' stroke-width='1.6'/></svg>");
+  opacity:.55;
+}
+.kicker{margin-top:26px;font-size:19px;font-family:'Lora';color:var(--brand);max-width:48ch}
 
-        #question-text {
-            font-size: 1.25em;
-            margin-bottom: 20px;
-            font-weight: bold;
-            line-height: 1.5;
-        }
+/* ---------- VIRADA ---------- */
+.turn{background:var(--base)}
+.twocol{display:grid;gap:20px;grid-template-columns:1fr;margin-top:8px}
+.card-soft{
+  background:var(--surface);border-radius:var(--r-card);padding:24px;
+}
+.card-soft.accent{background:#fff;border-left:4px solid var(--brand);box-shadow:var(--shadow)}
+.card-soft h3{margin-bottom:10px}
+.card-soft p{margin-bottom:0}
+.anti{
+  margin-top:26px;border-top:1px solid var(--line);padding-top:26px;max-width:60ch;
+}
+.anti strong{color:var(--brand)}
 
-        .options-list {
-            list-style: none;
-            padding: 0;
-        }
+/* ---------- MÉTODO BÚSSOLA ---------- */
+.method{background:var(--brand);color:#fff}
+.method h2,.method h3{color:#fff}
+.method .eyebrow{color:#9CC4C9}
+.method p{color:#D6E4E7}
+.steps{display:grid;gap:16px;grid-template-columns:1fr;margin-top:26px}
+.step{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+  border-radius:var(--r-card);padding:22px;
+}
+.step svg{width:30px;height:30px;margin-bottom:12px;display:block}
+.step h3{font-size:18px;margin-bottom:8px}
+.step p{font-size:16px;margin-bottom:0}
+.deliver{
+  margin-top:26px;background:rgba(122,158,142,.18);
+  border:1px solid var(--proof);border-radius:var(--r-card);
+  padding:20px;max-width:60ch;
+}
+.deliver p{color:#fff;margin-bottom:0}
+.method .cta-block{margin-left:auto;margin-right:auto}
+.method .micro{color:#9CC4C9}
 
-        .option-item {
-            background-color: #e9ecef;
-            border: 1px solid #dee2e6;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            font-size: 1.05em;
-        }
+/* ---------- DEPOIMENTOS ---------- */
+.quotes{display:grid;gap:16px;grid-template-columns:1fr;margin-top:22px}
+.quote{
+  background:#fff;border-radius:var(--r-card);padding:22px;box-shadow:var(--shadow);
+}
+.quote blockquote{
+  font-family:'Lora';font-size:17px;font-style:italic;color:var(--ink);line-height:1.55;
+}
+.quote cite{
+  display:block;margin-top:12px;font-style:normal;font-size:14px;
+  font-weight:600;color:var(--brand);
+}
+.warnbox{
+  margin-top:22px;background:#FFF4CC;border:1px dashed #C9A227;
+  border-radius:var(--r-card);padding:16px;font-size:14px;color:#6B5310;
+}
+.warnbox p{margin:0;max-width:none}
 
-        .option-item:hover:not(.disabled) {
-            background-color: #dfe6ee;
-            transform: translateY(-2px);
-        }
+/* ---------- AUTORIDADE ---------- */
+.about{background:var(--surface)}
+.about-grid{display:grid;gap:24px;grid-template-columns:1fr;align-items:start}
+.about .portrait{margin-top:0;max-width:100%;background:#fff}
 
-        .option-item.disabled {
-            cursor: default;
-        }
+/* ---------- OFERTA ---------- */
+.offer{background:var(--base)}
+.offer-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--r-card);
+  box-shadow:var(--shadow);padding:28px;max-width:600px;margin:0 auto;
+}
+.offer-card h2{margin-bottom:18px;font-size:24px}
+.price{
+  font-family:'Lora';font-size:46px;font-weight:700;color:var(--brand);
+  margin:22px 0 4px;line-height:1;
+}
+.price small{font-family:'Inter';font-size:15px;font-weight:400;color:var(--ink-soft);display:block;margin-top:8px}
+.transparency{
+  background:var(--surface);border-radius:8px;padding:16px;margin-top:22px;font-size:15px;
+}
+.transparency p{margin:0;max-width:none}
+.guarantee{
+  display:flex;gap:12px;align-items:flex-start;
+  background:rgba(122,158,142,.14);border:1px solid var(--proof);
+  border-radius:8px;padding:16px;margin-top:14px;font-size:15px;
+}
+.guarantee svg{width:22px;height:22px;flex:0 0 22px;margin-top:2px}
+.guarantee p{margin:0;max-width:none}
+.offer-card .cta-block{max-width:100%}
 
-        /* Classes para feedback */
-        .option-item.correct {
-            background-color: var(--success-color);
-            color: white;
-            border-color: var(--success-color);
-            font-weight: bold;
-        }
+/* ---------- FAQ ---------- */
+.faq{background:var(--surface)}
+details{
+  border-bottom:1px solid var(--line);padding:6px 0;max-width:720px;
+}
+summary{
+  cursor:pointer;list-style:none;padding:16px 34px 16px 0;position:relative;
+  font-weight:600;font-size:17px;color:var(--ink);
+}
+summary::-webkit-details-marker{display:none}
+summary::after{
+  content:"";position:absolute;right:4px;top:50%;width:11px;height:11px;
+  border-right:2px solid var(--brand);border-bottom:2px solid var(--brand);
+  transform:translateY(-70%) rotate(45deg);transition:transform .2s ease;
+}
+details[open] summary::after{transform:translateY(-30%) rotate(-135deg)}
+summary:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:4px}
+details p{padding:0 0 18px;color:var(--ink-soft);font-size:16px}
 
-        .option-item.incorrect {
-            background-color: var(--danger-color);
-            color: white;
-            border-color: var(--danger-color);
-            font-weight: bold;
-        }
+/* ---------- FECHAMENTO ---------- */
+.close{background:var(--brand-deep);color:#fff;text-align:center}
+.close h2{color:#fff;margin-bottom:18px}
+.close p{color:#C9DCE1;margin-left:auto;margin-right:auto;max-width:48ch}
+.close .cta-block{margin-left:auto;margin-right:auto}
+.close .micro{color:#8FB3BC}
+.ps{
+  margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.18);
+  font-size:15px;color:#9CC4C9;max-width:56ch;margin-left:auto;margin-right:auto;
+  text-align:left;
+}
+.ps strong{color:#fff}
 
-        /* Área de Racional */
-        #rationale-area {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none; /* Inicialmente oculto */
-        }
+/* ---------- RODAPÉ ---------- */
+footer{background:var(--ink);color:#8B9BA4;padding:34px 0;font-size:13px}
+footer a{color:#B9C7CE}
+footer p{max-width:70ch;margin-bottom:8px}
 
-        #rationale-area.correct-feedback {
-            background-color: rgba(40, 167, 69, 0.1); /* Verde claro */
-            border: 1px solid var(--success-color);
-        }
+/* ---------- ONDA DIVISÓRIA ---------- */
+.wave{display:block;width:100%;height:28px;color:var(--surface)}
 
-        #rationale-area.incorrect-feedback {
-            background-color: rgba(220, 53, 69, 0.1); /* Vermelho claro */
-            border: 1px solid var(--danger-color);
-        }
+/* ---------- MOTION ---------- */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
+  .cta:hover{transform:none}
+}
 
-        #rationale-text {
-            font-style: italic;
-            line-height: 1.4;
-        }
-
-        /* Botão para Próxima Questão */
-        #next-button {
-            display: none; /* Inicialmente oculto */
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        #next-button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Tela de Resultado Final */
-        #result-screen {
-            text-align: center;
-            padding: 40px 0;
-        }
-
-        #result-screen h2 {
-            font-size: 2em;
-            color: var(--primary-color);
-        }
-
-        #result-screen p {
-            font-size: 1.2em;
-            margin: 15px 0;
-        }
-
-        #restart-button {
-            padding: 10px 20px;
-            background-color: var(--success-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        #restart-button:hover {
-            background-color: #1e7e34;
-        }
-    </style>
+/* ---------- DESKTOP ---------- */
+@media (min-width:860px){
+  :root{--gap:96px}
+  body{font-size:18px}
+  h1{font-size:54px}
+  h2{font-size:40px;margin-bottom:26px}
+  .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;padding-top:56px}
+  .hero .portrait{margin-top:0;max-width:100%}
+  .cta{width:auto;min-width:320px;display:inline-block}
+  .cta-block{max-width:none}
+  .micro{text-align:left}
+  .proofbar .grid{grid-template-columns:repeat(3,1fr)}
+  .twocol{grid-template-columns:1fr 1fr;gap:24px}
+  .steps{grid-template-columns:repeat(3,1fr)}
+  .quotes{grid-template-columns:repeat(3,1fr)}
+  .about-grid{grid-template-columns:320px 1fr;gap:48px}
+  .offer-card{padding:44px}
+  .method .cta,.close .cta{display:inline-block}
+  .close .micro{text-align:center}
+  .pain li{font-size:19px}
+}
+</style>
 </head>
 <body>
 
-<div class="quiz-container">
-    <h1>Quiz de Revisão Final - Suporte ao Usuário</h1>
+<!-- ══════════ TOPO: MARCA, SEM MENU ══════════ -->
+<header class="topbar">
+  <div class="wrap brand">
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M16 5v13M16 18 6 18l10 9 10-9H16Z" stroke="#2E5A6B" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M3 27c2.2 1.6 4.4 1.6 6.5 0 2.2 1.6 4.3 1.6 6.5 0 2.2 1.6 4.3 1.6 6.5 0 2.1 1.6 4.3 1.6 6.5 0" stroke="#7A9E8E" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <span>Alexandre Jordão</span>
+  </div>
+</header>
 
-    <div id="quiz-screen">
-        <div id="question-number"></div>
-        <div class="progress-bar">
-            <div class="progress" id="progress-bar"></div>
-        </div>
+<!-- ══════════ 01 · HERO ══════════ -->
+<section class="hero wrap" id="hero">
+  <div>
+    <p class="eyebrow">Sessão de diagnóstico · online</p>
+    <h1>Sua ansiedade no relacionamento tem nome.</h1>
+    <p class="sub">Em 50 minutos, você descobre qual padrão emocional está por trás disso, e o que precisa ser trabalhado. Por escrito.</p>
 
-        <div id="question-text"></div>
+    <ul class="ticks">
+      <li>Diagnóstico em uma sessão</li>
+      <li>Você leva um mapa escrito</li>
+      <li>Online, R$97</li>
+    </ul>
 
-        <ul class="options-list" id="options-list">
-            </ul>
-
-        <div id="rationale-area">
-            <p id="rationale-text"></p>
-        </div>
-
-        <button id="next-button">Próxima Pergunta</button>
+    <div class="cta-block">
+      <a class="cta" href="#agendar">Quero minha sessão de diagnóstico</a>
+      <p class="micro">Resposta em até 24h no WhatsApp. Sem compromisso de continuar.</p>
     </div>
 
-    <div id="result-screen" style="display: none;">
-        <h2>Resultado da Revisão</h2>
-        <p>Você completou o quiz de 30 perguntas!</p>
-        <p>Pontuação Final: <span id="final-score"></span> / 30</p>
-        <button id="restart-button" onclick="window.location.reload()">Refazer Quiz</button>
+    <div class="seals">
+      <span class="ph">PROVA NECESSÁRIA: CRP nº ___</span>
+      <span><i class="dot"></i>Sigilo profissional</span>
+      <span><i class="dot"></i>Atendimento online</span>
     </div>
-</div>
+  </div>
+
+  <div class="portrait">[ FOTO DO ALEXANDRE · retrato, olhar direto, fundo neutro ]</div>
+</section>
+
+<!-- ══════════ 02 · BARRA DE PROVA ══════════ -->
+<section class="proofbar reveal">
+  <div class="wrap grid">
+    <div class="stat"><span class="ph">PROVA NECESSÁRIA</span><b>___</b><small>atendimentos realizados</small></div>
+    <div class="stat"><span class="ph">PROVA NECESSÁRIA</span><b>___</b><small>anos de prática clínica</small></div>
+    <div class="stat"><span class="ph">PROVA NECESSÁRIA</span><b>___</b><small>pessoas acompanham no Instagram</small></div>
+  </div>
+</section>
+
+<!-- ══════════ 03 · DIAGNÓSTICO DA DOR ══════════ -->
+<section class="reveal">
+  <div class="wrap">
+    <p class="eyebrow">O que se repete</p>
+    <h2>Você já sabe como é.</h2>
+    <ul class="pain">
+      <li>Ele demora para responder e seu dia inteiro trava.</li>
+      <li>Você relê a conversa procurando o que fez de errado.</li>
+      <li>Você diminui o que sente para não parecer demais.</li>
+      <li>Você fica, mesmo sem estar bem, porque sair dói mais.</li>
+      <li>E na próxima relação, tudo se repete.</li>
+    </ul>
+    <p class="kicker">Se você leu isso e reconheceu sua própria semana, não é coincidência. É padrão.</p>
+  </div>
+</section>
+
+<!-- ══════════ 04 · A VIRADA + ANTI-PROMESSA ══════════ -->
+<section class="turn reveal">
+  <div class="wrap">
+    <p class="eyebrow">A raiz</p>
+    <h2>O problema não é o que você faz. É o que te move.</h2>
+
+    <div class="twocol">
+      <div class="card-soft">
+        <h3>O que quase todo mundo tenta</h3>
+        <p>Mandar menos mensagem. Esperar mais tempo para responder. Fingir indiferença. Procurar a frase certa. Mudar o outro.</p>
+      </div>
+      <div class="card-soft accent">
+        <h3>O que acontece de verdade</h3>
+        <p>Nada disso mexe na causa. Existe um padrão emocional operando por baixo da relação, e enquanto ele estiver ativo, qualquer pessoa que entrar na sua vida vai virar uma nova fonte de ansiedade.</p>
+      </div>
+    </div>
+
+    <div class="anti">
+      <p><strong>Por isso, sejamos diretos:</strong> esta sessão não faz ninguém voltar. Não ensina o que responder no WhatsApp. Não é técnica para controlar o comportamento de outra pessoa. Se você quer que o outro mude, aqui não é o lugar.</p>
+      <p>Aqui a gente olha para o que está te puxando por dentro.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 05 · MÉTODO BÚSSOLA ══════════ -->
+<section class="method reveal" id="metodo">
+  <div class="wrap">
+    <p class="eyebrow">O mecanismo</p>
+    <h2>Método Bússola: 50 minutos, 3 movimentos.</h2>
+
+    <div class="steps">
+      <article class="step">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M4 8l8-3 8 3 8-3v19l-8 3-8-3-8 3V8Z" stroke="#9CC4C9" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M12 5v19M20 8v19" stroke="#9CC4C9" stroke-width="1.6"/>
+        </svg>
+        <h3>1. Mapa</h3>
+        <p>A gente reconstrói o que se repete: as relações, os momentos em que a ansiedade aparece, o que dispara.</p>
+      </article>
+
+      <article class="step">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M2 11c3.5-4 7-4 10.5 0s7 4 10.5 0 5.5-3 7-1" stroke="#9CC4C9" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M2 19c3.5-4 7-4 10.5 0s7 4 10.5 0 5.5-3 7-1" stroke="#9CC4C9" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M2 27c3.5-4 7-4 10.5 0" stroke="#9CC4C9" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <h3>2. Corrente</h3>
+        <p>Identificamos o padrão emocional que está te puxando por baixo. Ele tem nome, tem origem e tem funcionamento. Quando você vê o mecanismo, ele perde parte do poder.</p>
+      </article>
+
+      <article class="step">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <circle cx="16" cy="16" r="12" stroke="#9CC4C9" stroke-width="1.6"/>
+          <path d="M21 11l-3.2 7.8L10 22l3.2-7.8L21 11Z" stroke="#7A9E8E" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+        <h3>3. Rota</h3>
+        <p>Você recebe o Mapa de Rota Emocional: um documento com o padrão identificado e o que precisa ser trabalhado, em ordem.</p>
+      </article>
+    </div>
+
+    <div class="deliver">
+      <p>Esse documento é seu. Você leva com você mesmo que nunca mais volte aqui.</p>
+    </div>
+
+    <div class="cta-block">
+      <a class="cta" href="#agendar">Quero minha sessão de diagnóstico</a>
+      <p class="micro">Resposta em até 24h no WhatsApp. Sem compromisso de continuar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 06 · PROVA SOCIAL PROFUNDA ══════════ -->
+<section class="reveal">
+  <div class="wrap">
+    <p class="eyebrow">Quem já passou por isso</p>
+    <h2>O que elas dizem depois.</h2>
+
+    <div class="quotes">
+      <figure class="quote">
+        <span class="ph">PLACEHOLDER · SUBSTITUIR</span>
+        <blockquote>“Saí da sessão com o nome do que eu vivia há doze anos. Nunca ninguém tinha me dito que aquilo tinha explicação.”</blockquote>
+        <cite>M., 34 anos</cite>
+      </figure>
+      <figure class="quote">
+        <span class="ph">PLACEHOLDER · SUBSTITUIR</span>
+        <blockquote>“Achei que ia ouvir que eu era carente demais. Ouvi outra coisa, e chorei de alívio.”</blockquote>
+        <cite>C., 27 anos</cite>
+      </figure>
+      <figure class="quote">
+        <span class="ph">PLACEHOLDER · SUBSTITUIR</span>
+        <blockquote>“O mapa que ele me mandou depois eu li umas dez vezes. Foi a primeira vez que enxerguei o meu padrão de fora.”</blockquote>
+        <cite>R., 45 anos</cite>
+      </figure>
+    </div>
+
+    <div class="warnbox">
+      <p><strong>NÃO PUBLICAR ESTES TEXTOS.</strong> São moldes de preenchimento. Depoimento inventado em página de saúde mental, assinada por profissional com registro, é risco ético e jurídico. Colher 3 depoimentos reais, com autorização escrita, mesmo que anônimos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 07 · AUTORIDADE ══════════ -->
+<svg class="wave" viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true"><path d="M0 20c100-16 200-16 300 0s200 16 300 0 200-16 300 0 200 16 300 0v8H0Z" fill="currentColor"/></svg>
+<section class="about reveal">
+  <div class="wrap about-grid">
+    <div class="portrait">[ FOTO DO ALEXANDRE · ambiente de atendimento ]</div>
+    <div>
+      <p class="eyebrow">Quem vai te atender</p>
+      <h2>Alexandre Jordão</h2>
+      <p>Atendo mulheres que vivem com ansiedade nos relacionamentos.</p>
+      <p>Depois de <span class="ph">PROVA NECESSÁRIA: nº</span> atendimentos, uma coisa ficou clara: quase ninguém sofre só por causa da pessoa com quem está. Sofre por um padrão emocional que transforma qualquer relação em ameaça. É nisso que eu trabalho.</p>
+      <p><span class="ph">PROVA NECESSÁRIA: formação · CRP · abordagem</span></p>
+      <div class="seals">
+        <span><i class="dot"></i>CRP ativo</span>
+        <span><i class="dot"></i>Sigilo profissional</span>
+        <span><i class="dot"></i>Atendimento online</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 08 · OFERTA + GARANTIA ══════════ -->
+<section class="offer reveal">
+  <div class="wrap">
+    <div class="offer-card">
+      <p class="eyebrow">A sessão</p>
+      <h2>Sessão de Diagnóstico de Segurança Emocional</h2>
+
+      <ul class="ticks">
+        <li>50 minutos, individual, online</li>
+        <li>Método Bússola aplicado do início ao fim</li>
+        <li>Mapa de Rota Emocional enviado depois da sessão</li>
+        <li>Direcionamento claro do que trabalhar, e em que ordem</li>
+      </ul>
+
+      <p class="price">R$97<small>Pagamento único. Sem assinatura, sem pacote obrigatório.</small></p>
+
+      <div class="transparency">
+        <p><strong>Sobre a continuidade, com transparência:</strong> ao final, se fizer sentido, eu proponho um plano terapêutico mais longo. Você pode dizer não ali mesmo, sem constrangimento. O mapa é seu de qualquer forma.</p>
+      </div>
+
+      <div class="guarantee">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2l8 3v6c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5l8-3Z" stroke="#7A9E8E" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M8.5 12l2.4 2.4 4.6-4.8" stroke="#7A9E8E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p><strong>Garantia:</strong> se durante a sessão eu perceber que não posso te ajudar, eu devolvo os R$97 e te indico quem pode.</p>
+      </div>
+
+      <div class="cta-block">
+        <a class="cta" href="#agendar">Quero minha sessão de diagnóstico</a>
+        <p class="micro">Resposta em até 24h no WhatsApp. Sem compromisso de continuar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 09 · FAQ ══════════ -->
+<section class="faq reveal">
+  <div class="wrap">
+    <p class="eyebrow">Antes de decidir</p>
+    <h2>O que costumam me perguntar.</h2>
+
+    <details>
+      <summary>E se eu descobrir que o problema é ele, e não eu?</summary>
+      <p>Pode ser. Parte do trabalho é distinguir o que é padrão seu e o que é a relação. Você sai sabendo a diferença, e isso muda que decisão você toma.</p>
+    </details>
+    <details>
+      <summary>R$97 vale a pena por uma sessão só?</summary>
+      <p>Você sai com um documento escrito que identifica o padrão e aponta o caminho. Se eu perceber que não posso ajudar, você recebe o valor de volta. O risco é meu.</p>
+    </details>
+    <details>
+      <summary>Vou ter que contratar o acompanhamento depois?</summary>
+      <p>Não. A proposta existe, você pode recusar, e nada muda no que você já recebeu.</p>
+    </details>
+    <details>
+      <summary>Nunca fiz terapia. É estranho?</summary>
+      <p>A maioria das pessoas que me procura nunca fez. A primeira sessão é conversa, não teste.</p>
+    </details>
+    <details>
+      <summary>É sigiloso?</summary>
+      <p>Totalmente. Sigilo profissional, atendimento online, você escolhe o horário.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ══════════ 10 · FECHAMENTO ══════════ -->
+<section class="close reveal" id="agendar">
+  <div class="wrap">
+    <h2>Você já sabe como termina se nada mudar.</h2>
+    <p>Você já viveu esse ciclo antes. Já sabe a sensação de checar o celular às três da manhã. Já sabe o que vem depois.</p>
+    <p>Cinquenta minutos não resolvem sua vida. Mas te dão o nome do que você carrega, e a direção. É por onde começa.</p>
+
+    <div class="cta-block">
+      <!-- SUBSTITUIR O NÚMERO NO LINK ABAIXO -->
+      <a class="cta" href="https://wa.me/55XXXXXXXXXXX?text=Oi%20Alexandre%2C%20quero%20agendar%20a%20sess%C3%A3o%20de%20diagn%C3%B3stico" target="_blank" rel="noopener">Quero minha sessão de diagnóstico</a>
+      <p class="micro">Resposta em até 24h no WhatsApp. Sem compromisso de continuar.</p>
+    </div>
+
+    <p class="ps"><strong>P.S.</strong> R$97, 50 minutos, mapa escrito no seu nome. Se eu não puder te ajudar, você recebe o valor de volta e a indicação de quem pode. Você não arrisca nada além de uma conversa.</p>
+  </div>
+</section>
+
+<!-- ══════════ RODAPÉ ══════════ -->
+<footer>
+  <div class="wrap">
+    <p>Alexandre Jordão · Atendimento psicoterapêutico online · <span class="ph">CRP nº ___</span></p>
+    <p><span class="ph">LGPD</span> Ao clicar no botão, você é levada ao WhatsApp. Seu número será usado exclusivamente para agendamento e contato sobre a sessão, e não será compartilhado com terceiros. <a href="#">Política de privacidade</a></p>
+    <p>Esta página não substitui atendimento de urgência. Em caso de crise, ligue 188 (CVV, 24h).</p>
+  </div>
+</footer>
 
 <script>
-    // Dados do Quiz (as 30 perguntas geradas)
-    const quizData = [
-        {
-            "questionNumber": 1,
-            "question": "Qual dos itens abaixo representa o componente físico, palpável, que faz parte da estrutura de um computador?",
-            "answerOptions": [
-                {
-                    "text": "Firmware",
-                    "rationale": "Firmware é um tipo de software de baixo nível que controla o hardware, não sendo o componente físico em si.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Hardware",
-                    "rationale": "Hardware é o termo correto para descrever a parte física e tangível do computador, como o teclado, mouse e placa-mãe.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "Driver",
-                    "rationale": "Driver é um software que permite ao sistema operacional interagir com um dispositivo de hardware específico.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Software",
-                    "rationale": "Software é o conjunto de instruções e programas, a parte não-física do computador.",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 2,
-            "question": "A Manutenção Corretiva é o tipo de serviço de suporte que é aplicado:",
-            "answerOptions": [
-                {
-                    "text": "Para fazer melhorias e upgrades de desempenho no hardware.",
-                    "rationale": "Essa descrição se encaixa na Manutenção Evolutiva ou nos upgrades gerais.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Apenas na instalação inicial de um sistema operacional ou programa.",
-                    "rationale": "A instalação inicial é um processo de implantação, não uma manutenção reativa.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Após a falha de um componente ou software, visando restaurar a operação normal do sistema.",
-                    "rationale": "A Manutenção Corretiva é realizada para corrigir falhas, ou seja, 'após' a ocorrência de um problema.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "Periodicamente, para evitar futuros problemas, como limpeza interna de componentes.",
-                    "rationale": "Esta é a definição de Manutenção Preventiva.",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 3,
-            "question": "Qual componente é considerado uma das peças mais importantes do computador, conectando e permitindo a comunicação entre o Processador, a Memória RAM e os demais periféricos?",
-            "answerOptions": [
-                {
-                    "text": "Disco Rígido (HD/SSD)",
-                    "rationale": "O Disco Rígido/SSD é um dispositivo de armazenamento de dados e não o centro de comunicação entre os demais componentes.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Fonte de Alimentação",
-                    "rationale": "A Fonte de Alimentação apenas fornece energia e não atua como o 'hub' de comunicação dos dados.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Memória RAM",
-                    "rationale": "A Memória RAM armazena dados temporariamente para o processador, mas não é o componente que interliga fisicamente todos os outros.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Placa-Mãe (Motherboard)",
-                    "rationale": "A Placa-Mãe (Motherboard) é o circuito principal que conecta e coordena a comunicação de todos os componentes essenciais do computador.",
-                    "isCorrect": true
-                }
-            ]
-        },
-        {
-            "questionNumber": 4,
-            "question": "Um dos problemas mais comuns em computadores é o seu aquecimento excessivo. Qual tipo de manutenção é ideal para prevenir que este problema ocorra?",
-            "answerOptions": [
-                {
-                    "text": "Manutenção Evolutiva, atualizando o sistema operacional.",
-                    "rationale": "A Manutenção Evolutiva foca em adicionar novos recursos ou melhorar funcionalidades, não na prevenção física de problemas.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Manutenção Preditiva, usando softwares para prever o problema com precisão.",
-                    "rationale": "A Preditiva utiliza monitoramento para prever, mas a ação de limpeza e troca de pasta térmica é classificada como Preventiva.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Manutenção Preventiva, realizando a limpeza interna dos coolers e trocando a pasta térmica periodicamente.",
-                    "rationale": "Manutenção Preventiva é o conjunto de ações realizadas periodicamente para evitar que falhas e problemas, como o superaquecimento, ocorram.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "Manutenção Corretiva, trocando o processador depois que ele queima.",
-                    "rationale": "A Manutenção Corretiva ocorre após a falha; o objetivo é 'prevenir' o problema, não corrigi-lo depois de acontecer.",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 5,
-            "question": "O Processador (CPU) é o 'cérebro' do computador. Para que o computador funcione, o Processador deve ser complementado por qual componente de hardware essencial para o armazenamento temporário de dados e instruções em execução?",
-            "answerOptions": [
-                {
-                    "text": "Modem",
-                    "rationale": "O Modem é um dispositivo para conexão de rede, não tendo a função principal de armazenamento temporário para o processador.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Placa de Vídeo Dedicada",
-                    "rationale": "A Placa de Vídeo processa e armazena dados gráficos, mas a memória principal para o Processador e o Sistema Operacional é outra.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Memória RAM (Random Access Memory)",
-                    "rationale": "A Memória RAM é essencial, pois armazena de forma volátil os dados e instruções que o processador está usando ativamente, garantindo velocidade.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "Monitor",
-                    "rationale": "O Monitor é um periférico de saída que exibe informações, não um componente de armazenamento temporário de execução.",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 6,
-            "question": "Qual é a principal função da Fonte de Alimentação (Power Supply) em um computador desktop?",
-            "answerOptions": [
-                {
-                    "text": "Processar dados e executar programas.",
-                    "rationale": "Esta é a função principal do Processador (CPU).",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Armazenar dados de forma permanente.",
-                    "rationale": "Esta é a função do Disco Rígido (HD/SSD).",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Converter a energia da tomada (AC) para a voltagem adequada (DC) que os componentes internos utilizam.",
-                    "rationale": "A Fonte de Alimentação tem a função vital de regular e fornecer a corrente contínua (DC) com a voltagem correta para a Placa-Mãe e outros componentes.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "Gerenciar a comunicação entre o processador e a memória RAM.",
-                    "rationale": "Esta é a função dos chipsets da Placa-Mãe.",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 7,
-            "question": "O que o termo 'Sistema Operacional' (SO) representa na estrutura de software de um computador?",
-            "answerOptions": [
-                {
-                    "text": "Qualquer programa instalado, como um jogo ou um editor de texto.",
-                    "rationale": "Jogos e editores de texto são 'softwares de aplicação', que dependem do SO para rodar.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "O conjunto de softwares antivírus e de segurança.",
-                    "rationale": "Antivírus são utilitários, não o núcleo do Sistema Operacional.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "O software essencial que gerencia o hardware e os recursos, fornecendo uma interface para o usuário e para outros programas.",
-                    "rationale": "O SO é a camada fundamental que permite o funcionamento do computador, gerenciando memória, processos e dispositivos.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "Apenas o conjunto de drivers que controlam os periféricos.",
-                    "rationale": "Drivers são um tipo de software de sistema, mas o SO é o software mestre que os gerencia.",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 8,
-            "question": "Um usuário relata que seu computador não inicia e ouve bipes contínuos ou irregulares. Qual tipo de falha de hardware é o mais provável?",
-            "answerOptions": [
-                {
-                    "text": "Falha no cabo de rede.",
-                    "rationale": "Um cabo de rede desconectado apenas impediria o acesso à internet, não a inicialização do computador.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Falha na Memória RAM ou na Placa de Vídeo.",
-                    "rationale": "Bipes durante a inicialização são códigos de erro (POST) que frequentemente indicam problemas críticos no hardware principal, como a Memória RAM, Processador ou a Placa de Vídeo.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "Disco Rígido cheio ou fragmentado.",
-                    "rationale": "Um HD cheio ou fragmentado causa lentidão, mas o computador geralmente ainda inicializa o sistema operacional.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Bateria do mouse sem carga.",
-                    "rationale": "O computador inicializa perfeitamente mesmo sem um mouse funcionando.",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 9,
-            "question": "Qual termo descreve o serviço de suporte realizado para otimizar um sistema, como desfragmentar um disco rígido ou remover programas desnecessários da inicialização?",
-            "answerOptions": [
-                {
-                    "text": "Manutenção Corretiva de Software",
-                    "rationale": "A Corretiva é para falhas, como um erro de arquivo, não para otimização geral do desempenho.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Manutenção Evolutiva de Hardware",
-                    "rationale": "A Evolutiva envolve adicionar novos recursos, e as ações listadas são de software, não de hardware.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Manutenção Preventiva de Software",
-                    "rationale": "Ações como desfragmentação, limpeza e gerenciamento de inicialização são práticas de rotina para prevenir lentidão e instabilidade futuras, enquadrando-se na Manutenção Preventiva de software.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "Manutenção Preditiva de Hardware",
-                    "rationale": "A Preditiva envolve monitoramento contínuo de sinais, o que é diferente da intervenção ativa de otimização descrita.",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 10,
-            "question": "Qual componente de hardware tem como principal responsabilidade o armazenamento de longo prazo, mantendo os dados mesmo quando o computador está desligado?",
-            "answerOptions": [
-                {
-                    "text": "Memória RAM",
-                    "rationale": "A RAM é volátil; ela perde todos os dados quando o computador é desligado.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Processador (CPU)",
-                    "rationale": "O Processador executa instruções, ele não é um dispositivo de armazenamento de longo prazo.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Disco Rígido (HD) ou Unidade de Estado Sólido (SSD)",
-                    "rationale": "O HD e o SSD são os dispositivos de armazenamento não-volátil (permanente) onde o Sistema Operacional e todos os arquivos são guardados.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "Placa-Mãe (Motherboard)",
-                    "rationale": "A Placa-Mãe conecta os componentes, mas o armazenamento persistente é responsabilidade do HD/SSD.",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 11,
-            "question": "Um 'Driver' pode ser definido como:",
-            "answerOptions": [
-                {
-                    "text": "Um tipo de software de aplicação para edição de vídeo.",
-                    "rationale": "Um editor de vídeo é um software de aplicação, não um driver.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Um componente físico (hardware) que controla a ventilação do PC.",
-                    "rationale": "Um driver é software, e o controle de ventilação é feito por hardware como coolers e controladores.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Um programa que traduz comandos do sistema operacional para uma linguagem que um dispositivo de hardware específico entenda.",
-                    "rationale": "Drivers são essenciais para que o Sistema Operacional possa usar corretamente e se comunicar com placas de vídeo, impressoras, placas de rede, etc.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "O software de segurança responsável por bloquear vírus.",
-                    "rationale": "Antivírus e Firewall são os softwares responsáveis por bloquear vírus e acessos não autorizados.",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 12,
-            "question": "Qual dos seguintes softwares é um exemplo de 'Software de Aplicação'?",
-            "answerOptions": [
-                {
-                    "text": "Kernel do Linux",
-                    "rationale": "O Kernel é a parte central de um Sistema Operacional (Software de Sistema).",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Microsoft Word ou LibreOffice Writer.",
-                    "rationale": "Processadores de texto são programas que permitem ao usuário realizar tarefas específicas e produtivas, sendo um exemplo claro de Software de Aplicação.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "BIOS/UEFI",
-                    "rationale": "BIOS/UEFI é um Firmware, um software de baixo nível para iniciar o hardware.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Driver da Placa de Rede.",
-                    "rationale": "Drivers são Softwares de Sistema, essenciais para a operação do hardware.",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 13,
-            "question": "A 'Tela Azul da Morte' (Blue Screen of Death - BSOD) no Windows é um indicador comum de qual tipo de problema?",
-            "answerOptions": [
-                {
-                    "text": "Cabo de alimentação solto.",
-                    "rationale": "Um cabo de alimentação solto faria o computador desligar imediatamente ou não ligar, não gerando uma tela de erro de software/sistema.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Falha crítica de sistema, geralmente causada por drivers incompatíveis, falha de hardware ou erros graves na memória (RAM).",
-                    "rationale": "O BSOD é o mecanismo do Windows para relatar um erro irrecuperável que requer o encerramento imediato do sistema para proteger o hardware.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "Espaço de armazenamento esgotado.",
-                    "rationale": "HD/SSD cheio causa lentidão ou impede salvar arquivos, mas raramente um BSOD.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Conexão lenta com a internet.",
-                    "rationale": "A velocidade da internet não é uma falha de sistema operacional que causa um erro fatal (BSOD).",
-                    "isCorrect": false
-                }
-            ]
-        },
-        {
-            "questionNumber": 14,
-            "question": "Qual das seguintes ações NÃO é uma característica da Manutenção Preventiva de Hardware?",
-            "answerOptions": [
-                {
-                    "text": "Limpeza interna do gabinete e remoção de poeira.",
-                    "rationale": "Esta é uma ação de rotina para evitar superaquecimento, sendo, portanto, preventiva.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Substituição de um disco rígido danificado por um novo.",
-                    "rationale": "A substituição de um componente 'danificado' é uma correção após a falha, caracterizando-se como Manutenção Corretiva.",
-                    "isCorrect": true
-                },
-                {
-                    "text": "Verificação do estado dos cabos e conexões para garantir o encaixe seguro.",
-                    "rationale": "Verificar conexões é uma forma de prevenir problemas de contato ou falhas de energia, sendo preventiva.",
-                    "isCorrect": false
-                },
-                {
-                    "text": "Troca da pasta térmica do processador em intervalos regulares.",
-                    "rationale": "A troca de pasta térmica é uma medida planejada para prevenir superaquecimento, sendo preventiva.",
-                    "isCorrect": false
-                }
-            ]
-        }
-    ];
+// Todos os CTAs internos apontam para o WhatsApp final.
+const WHATSAPP = "https://wa.me/55XXXXXXXXXXX?text=Oi%20Alexandre%2C%20quero%20agendar%20a%20sess%C3%A3o%20de%20diagn%C3%B3stico";
+document.querySelectorAll('a.cta[href="#agendar"]').forEach((el,i)=>{
+  el.dataset.pos = i; // 0=hero, 1=metodo, 2=oferta  → medir qual botão converte
+  el.addEventListener('click', e=>{
+    e.preventDefault();
+    // dataLayer.push({event:'cta_click', posicao:el.dataset.pos});
+    window.open(WHATSAPP,'_blank','noopener');
+  });
+});
 
-    let currentQuestionIndex = 0;
-    let score = 0;
-    const totalQuestions = quizData.length;
-    let answered = false;
-
-    // Elementos do DOM
-    const questionNumberEl = document.getElementById('question-number');
-    const progressBarEl = document.getElementById('progress-bar');
-    const questionTextEl = document.getElementById('question-text');
-    const optionsListEl = document.getElementById('options-list');
-    const rationaleAreaEl = document.getElementById('rationale-area');
-    const rationaleTextEl = document.getElementById('rationale-text');
-    const nextButton = document.getElementById('next-button');
-    const quizScreenEl = document.getElementById('quiz-screen');
-    const resultScreenEl = document.getElementById('result-screen');
-    const finalScoreEl = document.getElementById('final-score');
-
-    function updateProgress() {
-        const progressPercentage = (currentQuestionIndex / totalQuestions) * 100;
-        progressBarEl.style.width = `${progressPercentage}%`;
-        questionNumberEl.textContent = `Pergunta ${currentQuestionIndex + 1} de ${totalQuestions}`;
-    }
-
-    function loadQuestion() {
-        if (currentQuestionIndex >= totalQuestions) {
-            showResult();
-            return;
-        }
-
-        const currentQuestion = quizData[currentQuestionIndex];
-        
-        // Limpa estado anterior
-        optionsListEl.innerHTML = '';
-        rationaleAreaEl.style.display = 'none';
-        rationaleAreaEl.classList.remove('correct-feedback', 'incorrect-feedback');
-        nextButton.style.display = 'none';
-        answered = false;
-
-        // Atualiza a pergunta
-        updateProgress();
-        questionTextEl.textContent = `${currentQuestion.questionNumber}. ${currentQuestion.question}`;
-
-        // Cria as opções
-        currentQuestion.answerOptions.forEach((option, index) => {
-            const listItem = document.createElement('li');
-            listItem.className = 'option-item';
-            // Usa as letras do alfabeto (A, B, C, D) para prefixar as opções
-            const optionLetter = String.fromCharCode(65 + index); 
-            listItem.textContent = `${optionLetter}) ${option.text}`;
-            listItem.dataset.isCorrect = option.isCorrect;
-            listItem.dataset.rationale = option.rationale;
-            listItem.addEventListener('click', () => checkAnswer(listItem, option));
-            optionsListEl.appendChild(listItem);
-        });
-    }
-
-    function checkAnswer(selectedElement, selectedOption) {
-        if (answered) return;
-        answered = true;
-
-        const isCorrect = selectedOption.isCorrect;
-        const rationale = selectedOption.rationale;
-        
-        // Desativa clique em todas as opções
-        Array.from(optionsListEl.children).forEach(item => {
-            item.classList.add('disabled');
-        });
-
-        // Aplica feedback visual
-        if (isCorrect) {
-            score++;
-            selectedElement.classList.add('correct');
-            rationaleAreaEl.classList.add('correct-feedback');
-            rationaleTextEl.innerHTML = `✅ **Correto!** ${rationale}`;
-        } else {
-            selectedElement.classList.add('incorrect');
-            rationaleAreaEl.classList.add('incorrect-feedback');
-            
-            // Encontra a resposta correta para a justificar
-            const correctOption = quizData[currentQuestionIndex].answerOptions.find(opt => opt.isCorrect);
-            
-            // Destaca a correta
-            Array.from(optionsListEl.children).forEach(item => {
-                if (item.dataset.isCorrect === 'true') {
-                    item.classList.add('correct');
-                }
-            });
-
-            rationaleTextEl.innerHTML = `❌ **Errado.** A alternativa correta era a ${String.fromCharCode(65 + quizData[currentQuestionIndex].answerOptions.indexOf(correctOption))}. ${rationale}`;
-        }
-
-        // Exibe o racional e o botão de próxima
-        rationaleAreaEl.style.display = 'block';
-        nextButton.style.display = 'block';
-    }
-
-    function showResult() {
-        quizScreenEl.style.display = 'none';
-        resultScreenEl.style.display = 'block';
-        finalScoreEl.textContent = `${score}`;
-        
-        // Atualiza a barra de progresso para 100%
-        progressBarEl.style.width = `100%`;
-        questionNumberEl.textContent = `Quiz Concluído`;
-    }
-
-    // Evento para o botão "Próxima Pergunta"
-    nextButton.addEventListener('click', () => {
-        currentQuestionIndex++;
-        loadQuestion();
-    });
-
-    // Inicia o Quiz
-    loadQuestion();
+// Reveal no scroll, respeitando prefers-reduced-motion.
+const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+if(!mq.matches && 'IntersectionObserver' in window){
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); obs.unobserve(en.target); }});
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+}else{
+  document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+}
 </script>
-
 </body>
-
 </html>
